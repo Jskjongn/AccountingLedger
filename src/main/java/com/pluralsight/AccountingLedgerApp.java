@@ -9,68 +9,88 @@ public class AccountingLedgerApp {
 
     public static void main(String[] args) {
 
-
+        // variable for the home screen to keep running until false (case X)
         boolean homeRunning = true;
         while (homeRunning) {
             // calls home screen method that returns user input
             String homeScreenOption = homeScreen();
-            // compares user input to the different cases
+            // matches user input main four options: D, P, L, X
             switch (homeScreenOption) {
+                // Add Deposit
                 case "D":
                     break;
+                // Make Payment
                 case "P":
                     break;
+                // Ledger Screen
                 case "L":
+                    // variable for the ledger screen to keep running or return to home screen (case H)
                     boolean ledgerRunning = true;
                     while (ledgerRunning) {
-
+                        // calls ledger screen method that returns user input
                         String ledgerScreenOption = ledgerScreen();
-
+                        // matches user input into one of five options: A, D, P, R, H
                         switch (ledgerScreenOption) {
+                            // All
                             case "A":
                                 break;
+                            // Deposits
                             case "D":
                                 break;
+                            // Payments
                             case "P":
                                 break;
+                            // Reports Screen
                             case "R":
+                                // variable for the reports screen to keep running or return to ledger screen (case 0)
                                 boolean reportsRunning = true;
                                 while (reportsRunning) {
-
+                                    // calls reports screen method that returns user input
                                     int reportsScreenOption = reportsScreen();
-
+                                    // matches user input to 0-5
                                     switch (reportsScreenOption) {
+                                        // Month To Date
                                         case 1:
                                             break;
+                                        // Previous Month
                                         case 2:
                                             break;
+                                        // Year To Date
                                         case 3:
                                             break;
+                                        // Previous Year
                                         case 4:
                                             break;
+                                        // Search by Vendor
                                         case 5:
                                             break;
+                                        // Returns back to Ledger Screen
                                         case 0:
                                             reportsRunning = false;
                                             break;
+                                        // displays if user didn't choose a correct option
                                         default:
                                             System.out.println("Invalid option - Please choose one of the valid options!");
                                             break;
                                     }
                                 }
                                 break;
+                            // Returns back to Home Screen
                             case "H":
                                 ledgerRunning = false;
                                 break;
+                            // displays if user didn't choose a correct option
                             default:
                                 System.out.println("Invalid option - Please choose one of the valid options!");
                                 break;
                         }
                     }
                     break;
+                // Exit the App completely
                 case "X":
                     homeRunning = false;
                     break;
+                // displays if user didn't choose a correct option
                 default:
                     System.out.println("Invalid option - Please choose one of the valid options!");
                     break;
@@ -139,11 +159,8 @@ public class AccountingLedgerApp {
                 "\t4) Previous Year\n" +
                 "\t5) Search by Vendor\n" +
                 "\t0) Back to Ledger Screen");
-
-        int userOption = userInput.nextInt();
-        userInput.nextLine();
         // returns user input
-        return userOption;
+        return userInput.nextInt();
     }
 
     /*
