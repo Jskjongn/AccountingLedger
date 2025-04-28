@@ -1,13 +1,24 @@
 package com.pluralsight;
 
+import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
+
+    // creates and formats the time stamps for the logger
+    static DateTimeFormatter timeStampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss");
 
     // creates scanner for user input
     static Scanner userInput = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+        ArrayList<Transaction> transactions = getTransaction();
 
         // variable for the home screen to keep running until false (case X)
         boolean homeRunning = true;
@@ -18,6 +29,8 @@ public class AccountingLedgerApp {
             switch (homeScreenOption) {
                 // Add Deposit
                 case "D":
+                    // calls make deposit method that adds deposits to the file
+                    makeDeposit(transactions);
                     break;
                 // Make Payment
                 case "P":
@@ -110,10 +123,37 @@ public class AccountingLedgerApp {
         return userInput.nextLine().toUpperCase().trim();
     }
 
-    /*
-    method for making a deposit
-     */
+    public static void makeDeposit(ArrayList<Transaction> transactions) {
+        // calls file writer method to starting writing to the file
+        BufferedWriter bufferWriter = fileWriter("transactions.csv");
+        // prompts user for deposit information and stores the user inputs
+        System.out.println("D) Make a Deposit - Please enter your deposit information:");
+        System.out.print("Description: ");
+        String description = userInput.nextLine().trim();
+        System.out.print("\nVendor: ");
+        String vendor = userInput.nextLine().trim();
+        System.out.print("\nAmount: ");
+        int amount = userInput.nextInt();
 
+        try {
+            // creates the time stamp and takes in current date and time
+            LocalDateTime timeStamp = LocalDateTime.now();
+            // creates first header row
+            bufferWriter.write("date|time|description|vendor|amount");
+            // creates a new line to write on
+            bufferWriter.newLine();
+            // concatenates the time stamp with the formatter and the user inputs of their deposit information
+            bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
+            // displays out the deposit just made
+            System.out.println("Deposit: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
+                    " successfully made!");
+            // closes out the writer
+            bufferWriter.close();
+        } catch (Exception e) {
+            System.out.println("Deposit was not successfully made!" + e.getMessage());
+        }
+
+    }
 
     /*
     method for making a payment
@@ -186,4 +226,56 @@ public class AccountingLedgerApp {
     /*
     method for searching by vendor
      */
+
+    // creates file reader
+    public static BufferedReader fileReader(String fileName) {
+        try {
+            // finds the file in the specific path and creates file and buffered reader
+            FileReader inventoryFile = new FileReader("src/main/resources/" + fileName);
+            return new BufferedReader(inventoryFile);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //creates file writer
+    public static BufferedWriter fileWriter(String fileName) {
+        try {
+            // finds the file in the specific path and creates file and buffered writer
+            // appends all new lines to existing file instead of overriding it
+            FileWriter inventoryFile = new FileWriter("src/main/resources/" + fileName, true);
+            return new BufferedWriter(inventoryFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // creates array list of transactions to return
+    public static ArrayList<Transaction> getTransaction() {
+        // creates new array list that takes in the Transaction class
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        try {
+            // calls on file reader class and creates the file and buffered reader which takes in the csv file
+            BufferedReader bufferReader = fileReader("transactions.csv");
+            // reads the first header row of strings
+            bufferReader.readLine();
+            // variable to store the lines in the file read
+            String transactionsFile;
+            // reads until the file returns null
+            while ((transactionsFile = bufferReader.readLine()) != null) {
+                // splits the file at the pipe and stores it in an array
+                String[] transactionParts = transactionsFile.split("\\|");
+                // creates new transaction object to assign the split parts into the constructor parameters
+                Transaction transactionDetails = new Transaction(LocalDate.parse(transactionParts[0]), LocalTime.parse(transactionParts[1]),
+                        transactionParts[2], transactionParts[3], Double.parseDouble(transactionParts[4]));
+                // adds the details into new transactions array list
+                transactions.add(transactionDetails);
+            }
+            // closes buffered reader
+            bufferReader.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return transactions;
+    }
 }
