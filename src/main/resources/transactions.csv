@@ -1,16 +1,10 @@
 date|time|description|vendor|amount
-2025-04-28|15:23:41|Bi-weekly Wisely payment|Year Up United|150
-2025-04-27|09:45:30|Salary Payment|Employer|5000.00
-2025-04-25|14:12:45|Utility Bill Payment|Electric Co.|-120.00
-2025-04-22|11:33:15|Freelance Project Payment|Client XYZ|200.00
-2025-04-18|16:58:00|Groceries|SuperMart|-50.00
-2025-04-15|09:17:30|Rent Payment|Landlord|-300.00
-2025-03-30|08:25:00|Tax Refund|IRS|1500.00
-2025-03-27|12:49:30|Subscription Service Payment|Streaming Co.|-90.00
-2025-03-23|13:11:45|Birthday Gift|Family|800.00
-2025-03-10|08:58:30|Phone Bill Payment|Mobile Provider|-75.00
-2025-01-15|10:39:00|Year-end Bonus|Employer|2000.00
+2024-11-05|15:27:45|Side Business Payment|Client ABC|1000.00
+2024-11-30|10:16:30|Car Loan Repayment|Car Loan Co.|-250.00
+2024-12-10|14:21:00|Credit Card Payment|Bank|-120.00
+2024-12-20|09:02:15|Holiday Gift|Relative|500.00
 2025-01-05|11:04:00|Gym Membership|Fitness Club|-250.00
+2025-01-15|10:39:00|Year-end Bonus|Employer|2000.00
 2025-01-20|09:51:30|Freelance Project Payment|Client XYZ|350.00
 2025-01-25|14:37:15|Online Course Payment|EdTech Co.|-150.00
 2025-01-30|08:22:30|Coffee Shop|Café Java|-12.50
@@ -19,7 +13,13 @@ date|time|description|vendor|amount
 2025-02-14|15:06:30|Valentine's Day Gift|Jewelry Store|-220.00
 2025-02-18|13:24:00|Freelance Project Payment|Client LMN|400.00
 2025-02-28|16:40:30|Rent Payment|Landlord|-300.00
-2024-12-20|09:02:15|Holiday Gift|Relative|500.00
-2024-12-10|14:21:00|Credit Card Payment|Bank|-120.00
-2024-11-30|10:16:30|Car Loan Repayment|Car Loan Co.|-250.00
-2024-11-05|15:27:45|Side Business Payment|Client ABC|1000.00
+2025-03-10|08:58:30|Phone Bill Payment|Mobile Provider|-75.00
+2025-03-23|13:11:45|Birthday Gift|Family|800.00
+2025-03-27|12:49:30|Subscription Service Payment|Streaming Co.|-90.00
+2025-03-30|08:25:00|Tax Refund|IRS|1500.00
+2025-04-15|09:17:30|Rent Payment|Landlord|-300.00
+2025-04-18|16:58:00|Groceries|SuperMart|-50.00
+2025-04-22|11:33:15|Freelance Project Payment|Client XYZ|200.00
+2025-04-25|14:12:45|Utility Bill Payment|Electric Co.|-120.00
+2025-04-27|09:45:30|Salary Payment|Employer|5000.00
+2025-04-28|15:23:41|Bi-weekly Wisely payment|Year Up United|150

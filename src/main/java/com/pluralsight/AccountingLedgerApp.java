@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
@@ -22,7 +23,7 @@ public class AccountingLedgerApp {
 
         boolean homeRunning = true;
         while (homeRunning) {
-            // calls home screen method that returns user input
+            // calls home screen that returns user input
             String homeScreenOption = homeScreen();
             // matches user input main four options: D, P, L, X
             switch (homeScreenOption) {
@@ -39,7 +40,7 @@ public class AccountingLedgerApp {
                     // variable for the ledger screen to keep running or return to home screen (case H)
                     boolean ledgerRunning = true;
                     while (ledgerRunning) {
-                        // calls ledger screen method that returns user input
+                        // calls ledger screen that returns user input
                         String ledgerScreenOption = ledgerScreen();
                         // matches user input into one of five options: A, D, P, R, H
                         switch (ledgerScreenOption) {
@@ -60,12 +61,13 @@ public class AccountingLedgerApp {
                                 // variable for the reports screen to keep running or return to ledger screen (case 0)
                                 boolean reportsRunning = true;
                                 while (reportsRunning) {
-                                    // calls reports screen method that returns user input
+                                    // calls reports screen that returns user input
                                     int reportsScreenOption = reportsScreen();
                                     // matches user input to 0-5
                                     switch (reportsScreenOption) {
                                         // Month To Date
                                         case 1:
+                                            monthToDate(transactions);
                                             break;
                                         // Previous Month
                                         case 2:
@@ -137,8 +139,12 @@ public class AccountingLedgerApp {
         // prompts user for deposit information and stores the user inputs
         System.out.println("D) Make a Deposit - Please enter your deposit information:");
 
+
         System.out.print("Description: ");
         String description = userInput.nextLine().trim();
+//        if (description.isEmpty()){
+//            System.out.println("Please enter a description!");
+//        }
 
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
@@ -150,15 +156,15 @@ public class AccountingLedgerApp {
 
         try {
             // creates the time stamp and takes in current date and time
-            LocalDateTime timeStamp = LocalDateTime.now();
+            LocalDateTime dateAndTime = LocalDateTime.now();
 
             // creates a new line to write on
             bufferWriter.newLine();
 
             // concatenates the time stamp with the formatter and the user inputs of their deposit information
-            bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
+            bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
             // displays out the deposit just made
-            System.out.println("Deposit: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
+            System.out.println("Deposit: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
                     " successfully made!");
 
             // closes out the writer
@@ -191,7 +197,7 @@ public class AccountingLedgerApp {
 
         try {
             // creates the time stamp and takes in current date and time
-            LocalDateTime timeStamp = LocalDateTime.now();
+            LocalDateTime dateAndTime = LocalDateTime.now();
 
             // creates a new line to write on
             bufferWriter.newLine();
@@ -200,9 +206,9 @@ public class AccountingLedgerApp {
             double payment = -1 * amount;
 
             // concatenates the time stamp with the formatter and the user inputs of their payment information
-            bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment);
+            bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment);
             // displays out the payment just made
-            System.out.println("Payment: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment +
+            System.out.println("Payment: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment +
                     " successfully made!");
 
             // closes out the writer
@@ -287,10 +293,24 @@ public class AccountingLedgerApp {
         return option;
     }
 
-    /*
-    method for month to date report
-     */
+    //displays report of month to current date
+    public static void monthToDate(ArrayList<Transaction> transactions){
 
+        // gets current date and gets month number and year from current date
+        LocalDate currentDate = LocalDate.now();
+        int currentMonth = currentDate.getMonthValue();
+        int currentYear = currentDate.getYear();
+
+        // goes through array and gets transaction dates
+        for (Transaction t : transactions){
+            LocalDate target = t.getDate();
+            // compares dates in array to current month and year to display transactions only of this month
+            if (target.getMonthValue() == currentMonth && target.getYear() == currentYear){
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+    }
 
     /*
     method for previous month report
@@ -306,8 +326,9 @@ public class AccountingLedgerApp {
     method for previous year report
      */
 
+
     // displays vendor when searched
-    public static void searchVendor(ArrayList<Transaction> transactions){
+    public static void searchVendor(ArrayList<Transaction> transactions) {
 
         // prompts user to enter vendor name
         System.out.println("5) Search by Vendor - Please enter Vendor name");
@@ -315,8 +336,8 @@ public class AccountingLedgerApp {
         String vendorName = userInput.nextLine();
 
         // loops through transactions and gets the vendor to match user input
-        for (Transaction t : transactions){
-            if (t.getVendor().equalsIgnoreCase(vendorName)){
+        for (Transaction t : transactions) {
+            if (t.getVendor().equalsIgnoreCase(vendorName)) {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
@@ -325,6 +346,7 @@ public class AccountingLedgerApp {
 
     // creates file reader
     public static BufferedReader fileReader(String fileName) {
+
         try {
             // finds the file in the specific path and creates file and buffered reader
             FileReader inventoryFile = new FileReader("src/main/resources/" + fileName);
@@ -336,6 +358,7 @@ public class AccountingLedgerApp {
 
     //creates file writer
     public static BufferedWriter fileWriter(String fileName) {
+
         try {
             // finds the file in the specific path and creates file and buffered writer
             // appends all new lines to existing file instead of overriding it
@@ -348,26 +371,35 @@ public class AccountingLedgerApp {
 
     // creates array list of transactions to return
     public static ArrayList<Transaction> getTransaction() {
+
         // creates new array list that takes in the Transaction class
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
         try {
             // calls on file reader class and creates the file and buffered reader which takes in the csv file
             BufferedReader bufferReader = fileReader("transactions.csv");
+
             // reads the first header row of strings
             bufferReader.readLine();
+
             // variable to store the lines in the file read
             String transactionsFile;
             // reads until the file returns null
             while ((transactionsFile = bufferReader.readLine()) != null) {
+
                 // splits the file at the pipe and stores it in an array
                 String[] transactionParts = transactionsFile.split("\\|");
+
                 // creates new transaction object to assign the split parts into the constructor parameters
                 Transaction transactionDetails = new Transaction(LocalDate.parse(transactionParts[0]), LocalTime.parse(transactionParts[1]),
                         transactionParts[2], transactionParts[3], Double.parseDouble(transactionParts[4]));
+
                 // adds the details into new transactions array list
                 transactions.add(transactionDetails);
-            }
 
+            }
+            // reverses order from newest at top to the oldest at bottom
+            Collections.reverse(transactions);
             // closes buffered reader
             bufferReader.close();
         } catch (Exception e) {
