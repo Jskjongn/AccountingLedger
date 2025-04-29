@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
@@ -21,7 +20,6 @@ public class AccountingLedgerApp {
 
         ArrayList<Transaction> transactions = getTransaction();
 
-        // variable for the home screen to keep running until false (case X)
         boolean homeRunning = true;
         while (homeRunning) {
             // calls home screen method that returns user input
@@ -30,12 +28,10 @@ public class AccountingLedgerApp {
             switch (homeScreenOption) {
                 // Add Deposit
                 case "D":
-                    // calls make deposit method that adds deposits to file (positive numbers)
                     makeDeposit(transactions);
                     break;
                 // Make Payment
                 case "P":
-                    // calls make payment method that adds payments to file(negative numbers
                     makePayment(transactions);
                     break;
                 // Ledger Screen
@@ -49,17 +45,14 @@ public class AccountingLedgerApp {
                         switch (ledgerScreenOption) {
                             // All
                             case "A":
-                                // displays all transactions made
                                 viewAll(transactions);
                                 break;
                             // Deposits
                             case "D":
-                                // displays only deposits made
                                 viewDeposits(transactions);
                                 break;
                             // Payments
                             case "P":
-                                // displays only payments made
                                 viewPayments(transactions);
                                 break;
                             // Reports Screen
@@ -85,6 +78,7 @@ public class AccountingLedgerApp {
                                             break;
                                         // Search by Vendor
                                         case 5:
+                                            searchVendor(transactions);
                                             break;
                                         // Returns back to Ledger Screen
                                         case 0:
@@ -122,40 +116,51 @@ public class AccountingLedgerApp {
 
     // displays the home screen with four options
     public static String homeScreen() {
+
         // prompts user what they would like to do or exit the app
         System.out.println("H) Home Screen - What may I assist you with today?\n" +
                 "\tD) Make a Deposit\n" +
                 "\tP) Make a Payment (Debit)\n" +
                 "\tL) View Ledgers and Previous Transactions\n" +
                 "\tX) Exit the Application");
+
         // returns user input
         return userInput.nextLine().toUpperCase().trim();
     }
 
     // makes a deposit (positive number)
     public static void makeDeposit(ArrayList<Transaction> transactions) {
+
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
+
         // prompts user for deposit information and stores the user inputs
         System.out.println("D) Make a Deposit - Please enter your deposit information:");
+
         System.out.print("Description: ");
         String description = userInput.nextLine().trim();
+
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
+
         System.out.print("\nAmount: ");
         double amount = userInput.nextDouble();
+        // eats leftover newline
         userInput.nextLine();
 
         try {
             // creates the time stamp and takes in current date and time
             LocalDateTime timeStamp = LocalDateTime.now();
+
             // creates a new line to write on
             bufferWriter.newLine();
+
             // concatenates the time stamp with the formatter and the user inputs of their deposit information
             bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
             // displays out the deposit just made
             System.out.println("Deposit: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
                     " successfully made!");
+
             // closes out the writer
             bufferWriter.close();
         } catch (Exception e) {
@@ -166,30 +171,40 @@ public class AccountingLedgerApp {
 
     // makes a payment (negative number)
     public static void makePayment(ArrayList<Transaction> transactions) {
+
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
+
         // prompts user for payment information and stores the user inputs
         System.out.println("P) Make a Payment - Please enter your debit information:");
+
         System.out.print("Description: ");
         String description = userInput.nextLine().trim();
+
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
+
         System.out.print("\nAmount: ");
         double amount = userInput.nextDouble();
+        // eats leftover newline
         userInput.nextLine();
 
         try {
             // creates the time stamp and takes in current date and time
             LocalDateTime timeStamp = LocalDateTime.now();
+
             // creates a new line to write on
             bufferWriter.newLine();
+
             // turns amount entered into a negative
             double payment = -1 * amount;
+
             // concatenates the time stamp with the formatter and the user inputs of their payment information
             bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment);
             // displays out the payment just made
             System.out.println("Payment: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment +
                     " successfully made!");
+
             // closes out the writer
             bufferWriter.close();
         } catch (Exception e) {
@@ -198,8 +213,9 @@ public class AccountingLedgerApp {
 
     }
 
-    // displays ledger screen to view previous transactions
+    // displays ledger screen
     public static String ledgerScreen() {
+
         // prompts user how they would like to view their ledgers or go back home
         System.out.println("L) Ledgers - How would you like to view your ledgers?\n" +
                 "\tA) All\n" +
@@ -207,12 +223,14 @@ public class AccountingLedgerApp {
                 "\tP) Payments\n" +
                 "\tR) Reports\n" +
                 "\tH) Back to Home Screen");
+
         // returns user input
         return userInput.nextLine().toUpperCase().trim();
     }
 
-    // displays all the ledgers in the transactions file
+    // displays all the ledgers
     public static void viewAll(ArrayList<Transaction> transactions) {
+
         // loops through the file and displays all transactions
         for (Transaction t : transactions) {
             System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
@@ -222,6 +240,7 @@ public class AccountingLedgerApp {
 
     // displays only deposits made
     public static void viewDeposits(ArrayList<Transaction> transactions) {
+
         // loops through the file and displays deposits
         for (Transaction t : transactions) {
             // if the amount is greater than 0 (positive) then it gets displayed
@@ -235,6 +254,7 @@ public class AccountingLedgerApp {
 
     // displays only payments made
     public static void viewPayments(ArrayList<Transaction> transactions) {
+
         // loops through the file and displays payments
         for (Transaction t : transactions) {
             // if the amount is less than 0 (negative) then it gets displayed
@@ -257,8 +277,14 @@ public class AccountingLedgerApp {
                 "\t4) Previous Year\n" +
                 "\t5) Search by Vendor\n" +
                 "\t0) Back to Ledger Screen");
+
         // returns user input
-        return userInput.nextInt();
+        int option = userInput.nextInt();
+
+        // eats leftover newline
+        userInput.nextLine();
+
+        return option;
     }
 
     /*
@@ -280,10 +306,22 @@ public class AccountingLedgerApp {
     method for previous year report
      */
 
+    // displays vendor when searched
+    public static void searchVendor(ArrayList<Transaction> transactions){
 
-    /*
-    method for searching by vendor
-     */
+        // prompts user to enter vendor name
+        System.out.println("5) Search by Vendor - Please enter Vendor name");
+        System.out.print("Vendor: ");
+        String vendorName = userInput.nextLine();
+
+        // loops through transactions and gets the vendor to match user input
+        for (Transaction t : transactions){
+            if (t.getVendor().equalsIgnoreCase(vendorName)){
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+    }
 
     // creates file reader
     public static BufferedReader fileReader(String fileName) {
@@ -329,7 +367,7 @@ public class AccountingLedgerApp {
                 // adds the details into new transactions array list
                 transactions.add(transactionDetails);
             }
-            
+
             // closes buffered reader
             bufferReader.close();
         } catch (Exception e) {
