@@ -34,6 +34,8 @@ public class AccountingLedgerApp {
                     break;
                 // Make Payment
                 case "P":
+                    //
+                    makePayment(transactions);
                     break;
                 // Ledger Screen
                 case "L":
@@ -123,6 +125,8 @@ public class AccountingLedgerApp {
         return userInput.nextLine().toUpperCase().trim();
     }
 
+    // makes a deposit
+    // positive numbers on transaction file
     public static void makeDeposit(ArrayList<Transaction> transactions) {
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
@@ -133,13 +137,12 @@ public class AccountingLedgerApp {
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
         System.out.print("\nAmount: ");
-        int amount = userInput.nextInt();
+        double amount = userInput.nextDouble();
+        userInput.nextLine();
 
         try {
             // creates the time stamp and takes in current date and time
             LocalDateTime timeStamp = LocalDateTime.now();
-            // creates first header row
-            bufferWriter.write("date|time|description|vendor|amount");
             // creates a new line to write on
             bufferWriter.newLine();
             // concatenates the time stamp with the formatter and the user inputs of their deposit information
@@ -158,7 +161,38 @@ public class AccountingLedgerApp {
     /*
     method for making a payment
      */
+    public static void makePayment(ArrayList<Transaction> transactions) {
+        // calls file writer method to starting writing to the file
+        BufferedWriter bufferWriter = fileWriter("transactions.csv");
+        // prompts user for payment information and stores the user inputs
+        System.out.println("P) Make a Payment - Please enter your debit information:");
+        System.out.print("Description: ");
+        String description = userInput.nextLine().trim();
+        System.out.print("\nVendor: ");
+        String vendor = userInput.nextLine().trim();
+        System.out.print("\nAmount: ");
+        double amount = userInput.nextDouble();
+        userInput.nextLine();
 
+        try {
+            // creates the time stamp and takes in current date and time
+            LocalDateTime timeStamp = LocalDateTime.now();
+            // creates a new line to write on
+            bufferWriter.newLine();
+            // turns amount entered into a negative
+            double payment = -1 * amount;
+            // concatenates the time stamp with the formatter and the user inputs of their payment information
+            bufferWriter.write(timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment);
+            // displays out the payment just made
+            System.out.println("Payment: " + timeStamp.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment +
+                    " successfully made!");
+            // closes out the writer
+            bufferWriter.close();
+        } catch (Exception e) {
+            System.out.println("Payment was not successfully made!" + e.getMessage());
+        }
+
+    }
 
     // displays ledger screen to view previous transactions
     public static String ledgerScreen() {
