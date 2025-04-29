@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
@@ -29,12 +30,12 @@ public class AccountingLedgerApp {
             switch (homeScreenOption) {
                 // Add Deposit
                 case "D":
-                    // calls make deposit method that adds deposits to the file
+                    // calls make deposit method that adds deposits to file (positive numbers)
                     makeDeposit(transactions);
                     break;
                 // Make Payment
                 case "P":
-                    //
+                    // calls make payment method that adds payments to file(negative numbers
                     makePayment(transactions);
                     break;
                 // Ledger Screen
@@ -48,12 +49,18 @@ public class AccountingLedgerApp {
                         switch (ledgerScreenOption) {
                             // All
                             case "A":
+                                // displays all transactions made
+                                viewAll(transactions);
                                 break;
                             // Deposits
                             case "D":
+                                // displays only deposits made
+                                viewDeposits(transactions);
                                 break;
                             // Payments
                             case "P":
+                                // displays only payments made
+                                viewPayments(transactions);
                                 break;
                             // Reports Screen
                             case "R":
@@ -125,8 +132,7 @@ public class AccountingLedgerApp {
         return userInput.nextLine().toUpperCase().trim();
     }
 
-    // makes a deposit
-    // positive numbers on transaction file
+    // makes a deposit (positive number)
     public static void makeDeposit(ArrayList<Transaction> transactions) {
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
@@ -158,9 +164,7 @@ public class AccountingLedgerApp {
 
     }
 
-    /*
-    method for making a payment
-     */
+    // makes a payment (negative number)
     public static void makePayment(ArrayList<Transaction> transactions) {
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
@@ -207,20 +211,40 @@ public class AccountingLedgerApp {
         return userInput.nextLine().toUpperCase().trim();
     }
 
-    /*
-    method for viewing all ledgers
-     */
+    // displays all the ledgers in the transactions file
+    public static void viewAll(ArrayList<Transaction> transactions) {
+        // loops through the file and displays all transactions
+        for (Transaction t : transactions) {
+            System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                    t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        }
+    }
 
+    // displays only deposits made
+    public static void viewDeposits(ArrayList<Transaction> transactions) {
+        // loops through the file and displays deposits
+        for (Transaction t : transactions) {
+            // if the amount is greater than 0 (positive) then it gets displayed
+            if (t.getAmount() > 0) {
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
 
-    /*
-    method for viewing only deposits
-     */
+        }
+    }
 
+    // displays only payments made
+    public static void viewPayments(ArrayList<Transaction> transactions) {
+        // loops through the file and displays payments
+        for (Transaction t : transactions) {
+            // if the amount is less than 0 (negative) then it gets displayed
+            if (t.getAmount() < 0) {
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
 
-    /*
-    method for viewing only payments
-     */
-
+        }
+    }
 
     // displays reports screen
     public static int reportsScreen() {
@@ -305,6 +329,7 @@ public class AccountingLedgerApp {
                 // adds the details into new transactions array list
                 transactions.add(transactionDetails);
             }
+            
             // closes buffered reader
             bufferReader.close();
         } catch (Exception e) {
