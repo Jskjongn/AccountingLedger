@@ -278,6 +278,8 @@ public class AccountingLedgerApp {
     // displays reports screen
     public static int reportsScreen() {
 
+        System.out.println("\n===============================================================");
+
         // prompts user of how they would like their report or go back to the ledger screen
         System.out.println("R) Reports - What kind of report would you like to run?\n" +
                 "\t1) Month To Date\n" +
@@ -297,7 +299,9 @@ public class AccountingLedgerApp {
     }
 
     // displays report of month to current date
-    public static void monthToDate(ArrayList<Transaction> transactions){
+    public static void monthToDate(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // gets current date and gets month number and year from current date
         LocalDate currentDate = LocalDate.now();
@@ -305,18 +309,31 @@ public class AccountingLedgerApp {
         int currentYear = currentDate.getYear();
 
         // goes through array and gets transaction dates
-        for (Transaction t : transactions){
+        for (Transaction t : transactions) {
             LocalDate target = t.getDate();
             // compares dates in array to current month and year to display transactions only of this month
-            if (target.getMonthValue() == currentMonth && target.getYear() == currentYear){
+            if (target.getMonthValue() == currentMonth && target.getYear() == currentYear) {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - R) Reports?");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
             }
         }
     }
 
     // displays report of previous month
-    public static void previousMonth(ArrayList<Transaction> transactions){
+    public static void previousMonth(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // gets current date to subtract month by 1 to get previous month value
         LocalDate currentDate = LocalDate.now();
@@ -325,36 +342,62 @@ public class AccountingLedgerApp {
         int currentYear = currentDate.getYear();
 
         // goes through array and gets transaction dates
-        for (Transaction t : transactions){
+        for (Transaction t : transactions) {
             LocalDate target = t.getDate();
             // compares dates in array to previous month and current year to display transactions only of previous month
-            if (target.getMonthValue() == previousMonth && target.getYear() == currentYear){
+            if (target.getMonthValue() == previousMonth && target.getYear() == currentYear) {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - R) Reports?");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
             }
         }
     }
 
     // displays report of year to current date
-    public static void yearToDate(ArrayList<Transaction> transactions){
+    public static void yearToDate(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // gets current year from the current date
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
 
         // goes through array and gets transaction dates
-        for (Transaction t : transactions){
+        for (Transaction t : transactions) {
             LocalDate target = t.getDate();
             // compares dates in array to current year
-            if (target.getYear() == currentYear){
+            if (target.getYear() == currentYear) {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - R) Reports?");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
             }
         }
     }
 
     // displays report of previous year
-    public static void previousYear(ArrayList<Transaction> transactions){
+    public static void previousYear(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // gets previous year by subtracting 1 from current year
         LocalDate currentDate = LocalDate.now();
@@ -362,12 +405,23 @@ public class AccountingLedgerApp {
         int previousYear = previous.getYear();
 
         // goes through array and gets transaction dates
-        for (Transaction t : transactions){
+        for (Transaction t : transactions) {
             LocalDate target = t.getDate();
             // compares dates in array to previous year
-            if (target.getYear() == previousYear){
+            if (target.getYear() == previousYear) {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - R) Reports?");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
             }
         }
     }
@@ -375,18 +429,40 @@ public class AccountingLedgerApp {
     // displays vendor when searched
     public static void searchVendor(ArrayList<Transaction> transactions) {
 
-        // prompts user to enter vendor name
-        System.out.println("5) Search by Vendor - Please enter Vendor name");
-        System.out.print("Vendor: ");
-        String vendorName = userInput.nextLine();
+        System.out.println("===============================================================");
 
-        // loops through transactions and gets the vendor to match user input
-        for (Transaction t : transactions) {
-            if (t.getVendor().equalsIgnoreCase(vendorName)) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
-                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        // prompts user to enter vendor name
+        System.out.println("5) Search by Vendor - Please enter Vendor's name");
+
+        while (true) {
+            // stores user input
+            System.out.print("\nVendor: ");
+            String vendorName = userInput.nextLine().trim();
+
+            // displays user input
+            System.out.println("\n" + vendorName + "'s Transactions:");
+            System.out.println("===============================================================");
+
+            // loops through transactions and gets the vendor to match user input and displays them
+            for (Transaction t : transactions) {
+                if (t.getVendor().equalsIgnoreCase(vendorName)) {
+                    System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                            t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+                }
+            }
+
+            System.out.println("===============================================================");
+
+            // asks user if they want to search again or exit to go back to Reports Screen
+            System.out.println("\nWould you like to search for another Vendor? (Y/N)");
+            String choice = userInput.nextLine();
+
+            // if user doesn't enter yes then exits
+            if (!choice.equalsIgnoreCase("Y")){
+                break;
             }
         }
+
     }
 
     // creates file reader
