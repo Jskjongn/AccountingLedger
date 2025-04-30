@@ -11,13 +11,19 @@ import java.util.Scanner;
 
 public class AccountingLedgerApp {
 
-    // creates and formats the time stamps for the logger
+    // creates and formats the time stamps for make deposit and payment
     static DateTimeFormatter timeStampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss");
 
     // creates scanner for user input
     static Scanner userInput = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+        // load up bar
+//        for (int i = 0; i <= 100; i++) {
+//            Thread.sleep(30);
+//            System.out.print("\rLoading... " + i + "%");
+//        }
 
         ArrayList<Transaction> transactions = getTransaction();
 
@@ -122,8 +128,10 @@ public class AccountingLedgerApp {
     // displays the home screen with four options
     public static String homeScreen() {
 
+        System.out.println("\n===============================================================");
+
         // prompts user what they would like to do or exit the app
-        System.out.println("H) Home Screen - What may I assist you with today?\n" +
+        System.out.println("\nH) Home Screen - What may I assist you with today?\n" +
                 "\tD) Make a Deposit\n" +
                 "\tP) Make a Payment (Debit)\n" +
                 "\tL) View Ledgers and Previous Transactions\n" +
@@ -142,17 +150,35 @@ public class AccountingLedgerApp {
         // prompts user for deposit information and stores the user inputs
         System.out.println("D) Make a Deposit - Please enter your deposit information:");
 
-
         System.out.print("Description: ");
         String description = userInput.nextLine().trim();
 
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
 
-        System.out.print("\nAmount: ");
-        double amount = userInput.nextDouble();
-        // eats leftover newline
-        userInput.nextLine();
+        double amount;
+
+        while (true) {
+            System.out.print("\nAmount: ");
+
+            // checks if user entered a double
+            if (userInput.hasNextDouble()) {
+                amount = userInput.nextDouble();
+                // eats leftover newline
+                userInput.nextLine();
+                // checks if amount is a positive number
+                if (amount > 0) {
+                    break;
+                } else {
+                    System.out.println("Invalid amount - Please enter a positive number!");
+                    continue;
+                }
+            } else {
+                System.out.println("Invalid entry - Please enter an amount using numeric numbers!");
+                userInput.nextLine();
+            }
+        }
+
 
         try {
             // creates the time stamp and takes in current date and time
@@ -169,7 +195,7 @@ public class AccountingLedgerApp {
 
             // closes out the writer
             bufferWriter.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Deposit was not successfully made!" + e.getMessage());
         }
 
@@ -184,16 +210,34 @@ public class AccountingLedgerApp {
         // prompts user for payment information and stores the user inputs
         System.out.println("P) Make a Payment - Please enter your debit information:");
 
-        System.out.print("Description: ");
+        System.out.print("\nDescription: ");
         String description = userInput.nextLine().trim();
 
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
 
-        System.out.print("\nAmount: ");
-        double amount = userInput.nextDouble();
-        // eats leftover newline
-        userInput.nextLine();
+        double amount;
+
+        while (true) {
+            System.out.print("\nAmount: ");
+
+            // checks if user entered a double
+            if (userInput.hasNextDouble()) {
+                amount = userInput.nextDouble();
+                // eats leftover newline
+                userInput.nextLine();
+                // if amount is greater than zero then it turns it into a negative
+                if (amount > 0) {
+                    amount *= -1;
+                    break;
+                } else if (amount < 0){
+                    break;
+                }
+            } else {
+                System.out.println("Invalid entry - Please enter an amount using numeric numbers!");
+                userInput.nextLine();
+            }
+        }
 
         try {
             // creates the time stamp and takes in current date and time
@@ -202,19 +246,16 @@ public class AccountingLedgerApp {
             // creates a new line to write on
             bufferWriter.newLine();
 
-            // turns amount entered into a negative
-            double payment = -1 * amount;
-
             // concatenates the time stamp with the formatter and the user inputs of their payment information
-            bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment);
+            bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
             // displays out the payment just made
-            System.out.println("Payment: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + payment +
+            System.out.println("Payment: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
                     " successfully made!");
 
             // closes out the writer
             bufferWriter.close();
         } catch (Exception e) {
-            System.out.println("Payment was not successfully made!" + e.getMessage());
+            System.out.println("Payment was not successfully made! " + e.getMessage());
         }
 
     }
@@ -431,7 +472,7 @@ public class AccountingLedgerApp {
             String choice = userInput.nextLine();
 
             // if user doesn't enter yes then exits
-            if (!choice.equalsIgnoreCase("Y")){
+            if (!choice.equalsIgnoreCase("Y")) {
                 break;
             }
         }
@@ -439,7 +480,7 @@ public class AccountingLedgerApp {
     }
 
     // exit question for ledger screen options
-    public static void ledgerScreenExit(){
+    public static void ledgerScreenExit() {
 
         System.out.println("===============================================================");
 
@@ -454,7 +495,7 @@ public class AccountingLedgerApp {
     }
 
     // exit question for reports screen options
-    public static void reportScreenExit(){
+    public static void reportScreenExit() {
 
         System.out.println("===============================================================");
 
