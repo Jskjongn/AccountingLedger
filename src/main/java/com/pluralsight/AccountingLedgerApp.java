@@ -145,9 +145,6 @@ public class AccountingLedgerApp {
 
         System.out.print("Description: ");
         String description = userInput.nextLine().trim();
-//        if (description.isEmpty()){
-//            System.out.println("Please enter a description!");
-//        }
 
         System.out.print("\nVendor: ");
         String vendor = userInput.nextLine().trim();
@@ -225,6 +222,8 @@ public class AccountingLedgerApp {
     // displays ledger screen
     public static String ledgerScreen() {
 
+        System.out.println("\n===============================================================");
+
         // prompts user how they would like to view their ledgers or go back home
         System.out.println("L) Ledgers - How would you like to view your ledgers?\n" +
                 "\tA) All\n" +
@@ -240,15 +239,21 @@ public class AccountingLedgerApp {
     // displays all the ledgers
     public static void viewAll(ArrayList<Transaction> transactions) {
 
+        System.out.println("===============================================================");
+
         // loops through the file and displays all transactions
         for (Transaction t : transactions) {
             System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                     t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
         }
+        // displays exit question
+        ledgerScreenExit();
     }
 
     // displays only deposits made
     public static void viewDeposits(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // loops through the file and displays deposits
         for (Transaction t : transactions) {
@@ -257,12 +262,15 @@ public class AccountingLedgerApp {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
-
         }
+        // displays exit question
+        ledgerScreenExit();
     }
 
     // displays only payments made
     public static void viewPayments(ArrayList<Transaction> transactions) {
+
+        System.out.println("===============================================================");
 
         // loops through the file and displays payments
         for (Transaction t : transactions) {
@@ -271,8 +279,9 @@ public class AccountingLedgerApp {
                 System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
-
         }
+        // displays exit question
+        ledgerScreenExit();
     }
 
     // displays reports screen
@@ -317,17 +326,8 @@ public class AccountingLedgerApp {
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
-
-        System.out.println("===============================================================");
-
-        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
-        while (true) {
-            System.out.println("\nWould you like to move back to - R) Reports?");
-            String choice = userInput.nextLine();
-            if (choice.equalsIgnoreCase("Y")) {
-                break;
-            }
-        }
+        // displays exit question
+        reportScreenExit();
     }
 
     // displays report of previous month
@@ -350,17 +350,8 @@ public class AccountingLedgerApp {
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
-
-        System.out.println("===============================================================");
-
-        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
-        while (true) {
-            System.out.println("\nWould you like to move back to - R) Reports?");
-            String choice = userInput.nextLine();
-            if (choice.equalsIgnoreCase("Y")) {
-                break;
-            }
-        }
+        // displays exit question
+        reportScreenExit();
     }
 
     // displays report of year to current date
@@ -381,17 +372,8 @@ public class AccountingLedgerApp {
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
-
-        System.out.println("===============================================================");
-
-        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
-        while (true) {
-            System.out.println("\nWould you like to move back to - R) Reports?");
-            String choice = userInput.nextLine();
-            if (choice.equalsIgnoreCase("Y")) {
-                break;
-            }
-        }
+        // displays exit question
+        reportScreenExit();
     }
 
     // displays report of previous year
@@ -413,17 +395,8 @@ public class AccountingLedgerApp {
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
-
-        System.out.println("===============================================================");
-
-        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
-        while (true) {
-            System.out.println("\nWould you like to move back to - R) Reports?");
-            String choice = userInput.nextLine();
-            if (choice.equalsIgnoreCase("Y")) {
-                break;
-            }
-        }
+        // displays exit question
+        reportScreenExit();
     }
 
     // displays vendor when searched
@@ -463,6 +436,36 @@ public class AccountingLedgerApp {
             }
         }
 
+    }
+
+    // exit question for ledger screen options
+    public static void ledgerScreenExit(){
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the ledger view instead of immediately coming back to Ledgers Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - L) Ledgers? (Y)");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
+            }
+        }
+    }
+
+    // exit question for reports screen options
+    public static void reportScreenExit(){
+
+        System.out.println("===============================================================");
+
+        // simple question to keep user inside the report instead of immediately coming back to Reports Screen
+        while (true) {
+            System.out.println("\nWould you like to move back to - R) Reports? (Y)");
+            String choice = userInput.nextLine();
+            if (choice.equalsIgnoreCase("Y")) {
+                break;
+            }
+        }
     }
 
     // creates file reader
