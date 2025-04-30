@@ -71,12 +71,15 @@ public class AccountingLedgerApp {
                                             break;
                                         // Previous Month
                                         case 2:
+                                            previousMonth(transactions);
                                             break;
                                         // Year To Date
                                         case 3:
+                                            yearToDate(transactions);
                                             break;
                                         // Previous Year
                                         case 4:
+                                            previousYear(transactions);
                                             break;
                                         // Search by Vendor
                                         case 5:
@@ -293,7 +296,7 @@ public class AccountingLedgerApp {
         return option;
     }
 
-    //displays report of month to current date
+    // displays report of month to current date
     public static void monthToDate(ArrayList<Transaction> transactions){
 
         // gets current date and gets month number and year from current date
@@ -312,20 +315,62 @@ public class AccountingLedgerApp {
         }
     }
 
-    /*
-    method for previous month report
-     */
+    // displays report of previous month
+    public static void previousMonth(ArrayList<Transaction> transactions){
 
+        // gets current date to subtract month by 1 to get previous month value
+        LocalDate currentDate = LocalDate.now();
+        LocalDate previous = currentDate.minusMonths(1);
+        int previousMonth = previous.getMonthValue();
+        int currentYear = currentDate.getYear();
 
-    /*
-    method for year to date report
-     */
+        // goes through array and gets transaction dates
+        for (Transaction t : transactions){
+            LocalDate target = t.getDate();
+            // compares dates in array to previous month and current year to display transactions only of previous month
+            if (target.getMonthValue() == previousMonth && target.getYear() == currentYear){
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+    }
 
+    // displays report of year to current date
+    public static void yearToDate(ArrayList<Transaction> transactions){
 
-    /*
-    method for previous year report
-     */
+        // gets current year from the current date
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
 
+        // goes through array and gets transaction dates
+        for (Transaction t : transactions){
+            LocalDate target = t.getDate();
+            // compares dates in array to current year
+            if (target.getYear() == currentYear){
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+    }
+
+    // displays report of previous year
+    public static void previousYear(ArrayList<Transaction> transactions){
+
+        // gets previous year by subtracting 1 from current year
+        LocalDate currentDate = LocalDate.now();
+        LocalDate previous = currentDate.minusYears(1);
+        int previousYear = previous.getYear();
+
+        // goes through array and gets transaction dates
+        for (Transaction t : transactions){
+            LocalDate target = t.getDate();
+            // compares dates in array to previous year
+            if (target.getYear() == previousYear){
+                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+    }
 
     // displays vendor when searched
     public static void searchVendor(ArrayList<Transaction> transactions) {
