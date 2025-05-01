@@ -19,15 +19,15 @@ public class AccountingLedgerApp {
 
     public static void main(String[] args) throws InterruptedException {
 
-        // loading bar and greeting message
+        // greeting message
         greeting();
 
-        // gets transactions list
+        // gets transactions list to use in switch statements
         ArrayList<Transaction> transactions = getTransaction();
 
+        // variable for the home screen to keep running or exit the app (case X)
         boolean homeRunning = true;
         while (homeRunning) {
-            Thread.sleep(250);
             // calls home screen that returns user input
             String homeScreenOption = homeScreen();
             // matches user input main four options: D, P, L, X
@@ -557,7 +557,7 @@ public class AccountingLedgerApp {
             Thread.sleep(30);
             System.out.print("\rLoading... " + i + "%");
         }
-
+        // greeting message
         System.out.println("\n_________________________________________");
         System.out.println("|                                       |");
         System.out.println("|               Welcome                 |");
@@ -566,7 +566,7 @@ public class AccountingLedgerApp {
         System.out.println("|                 App!                  |");
         System.out.println("|_______________________________________|");
 
-        Thread.sleep(2000);
+        Thread.sleep(1000);
     }
 
     // exit question for ledger screen options
