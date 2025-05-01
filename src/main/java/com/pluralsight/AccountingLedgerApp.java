@@ -19,16 +19,15 @@ public class AccountingLedgerApp {
 
     public static void main(String[] args) throws InterruptedException {
 
-        // load up bar
-//        for (int i = 0; i <= 100; i++) {
-//            Thread.sleep(30);
-//            System.out.print("\rLoading... " + i + "%");
-//        }
+        // loading bar and greeting message
+        greeting();
 
+        // gets transactions list
         ArrayList<Transaction> transactions = getTransaction();
 
         boolean homeRunning = true;
         while (homeRunning) {
+            Thread.sleep(250);
             // calls home screen that returns user input
             String homeScreenOption = homeScreen();
             // matches user input main four options: D, P, L, X
@@ -36,13 +35,16 @@ public class AccountingLedgerApp {
                 // Add Deposit
                 case "D":
                     makeDeposit(transactions);
+                    Thread.sleep(500);
                     break;
                 // Make Payment
                 case "P":
                     makePayment(transactions);
+                    Thread.sleep(500);
                     break;
                 // Ledger Screen
                 case "L":
+                    Thread.sleep(500);
                     // variable for the ledger screen to keep running or return to home screen (case H)
                     boolean ledgerRunning = true;
                     while (ledgerRunning) {
@@ -53,17 +55,21 @@ public class AccountingLedgerApp {
                             // All
                             case "A":
                                 viewAll(transactions);
+                                Thread.sleep(500);
                                 break;
                             // Deposits
                             case "D":
                                 viewDeposits(transactions);
+                                Thread.sleep(500);
                                 break;
                             // Payments
                             case "P":
                                 viewPayments(transactions);
+                                Thread.sleep(500);
                                 break;
                             // Reports Screen
                             case "R":
+                                Thread.sleep(500);
                                 // variable for the reports screen to keep running or return to ledger screen (case 0)
                                 boolean reportsRunning = true;
                                 while (reportsRunning) {
@@ -74,25 +80,33 @@ public class AccountingLedgerApp {
                                         // Month To Date
                                         case 1:
                                             monthToDate(transactions);
+                                            Thread.sleep(500);
                                             break;
                                         // Previous Month
                                         case 2:
                                             previousMonth(transactions);
+                                            Thread.sleep(500);
                                             break;
                                         // Year To Date
                                         case 3:
                                             yearToDate(transactions);
+                                            Thread.sleep(500);
                                             break;
                                         // Previous Year
                                         case 4:
                                             previousYear(transactions);
+                                            Thread.sleep(500);
                                             break;
                                         // Search by Vendor
                                         case 5:
                                             searchVendor(transactions);
+                                            Thread.sleep(500);
                                             break;
                                         // Returns back to Ledger Screen
                                         case 0:
+                                            System.out.println("\n0) Returning back to Ledger Screen!");
+                                            System.out.println("---------------------------------------------------------------");
+                                            Thread.sleep(1500);
                                             reportsRunning = false;
                                             break;
                                         // displays if user didn't choose a correct option
@@ -104,6 +118,9 @@ public class AccountingLedgerApp {
                                 break;
                             // Returns back to Home Screen
                             case "H":
+                                System.out.println("\nH) Returning back to Home Screen!");
+                                System.out.println("---------------------------------------------------------------");
+                                Thread.sleep(1500);
                                 ledgerRunning = false;
                                 break;
                             // displays if user didn't choose a correct option
@@ -115,6 +132,9 @@ public class AccountingLedgerApp {
                     break;
                 // Exit the App completely
                 case "X":
+                    System.out.println("\nX) You Exited the app, have a great day!");
+                    System.out.println("---------------------------------------------------------------");
+                    Thread.sleep(1500);
                     homeRunning = false;
                     break;
                 // displays if user didn't choose a correct option
@@ -125,13 +145,18 @@ public class AccountingLedgerApp {
         }
     }
 
+
+// --------------------------------------------------------------------------------------------------------------------
+
+
     // displays the home screen with four options
     public static String homeScreen() {
 
-        System.out.println("\n===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // prompts user what they would like to do or exit the app
-        System.out.println("\nH) Home Screen - What may I assist you with today?\n" +
+        System.out.println("H) Home Screen - How may I assist you today?\n" +
+                "---------------------------------------------------------------\n" +
                 "\tD) Make a Deposit\n" +
                 "\tP) Make a Payment (Debit)\n" +
                 "\tL) View Ledgers and Previous Transactions\n" +
@@ -144,13 +169,18 @@ public class AccountingLedgerApp {
     // makes a deposit (positive number)
     public static void makeDeposit(ArrayList<Transaction> transactions) {
 
+        System.out.println("===============================================================\n");
+
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
 
-        // prompts user for deposit information and stores the user inputs
-        System.out.println("D) Make a Deposit - Please enter your deposit information:");
 
-        System.out.print("Description: ");
+
+        // prompts user for deposit information and stores the user inputs
+        System.out.println("       --------------- D) Make a Deposit ---------------");
+        System.out.println("       ----- Please enter your deposit information -----");
+
+        System.out.print("\nDescription: ");
         String description = userInput.nextLine().trim();
 
         System.out.print("\nVendor: ");
@@ -190,11 +220,15 @@ public class AccountingLedgerApp {
             // concatenates the time stamp with the formatter and the user inputs of their deposit information
             bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
             // displays out the deposit just made
-            System.out.println("Deposit: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
+            System.out.println("\nDeposit: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
                     " successfully made!");
 
             // closes out the writer
             bufferWriter.close();
+
+            // to reload transactions memory to display the new deposit to display the ledgers
+            transactions.clear();
+            transactions.addAll(getTransaction());
         } catch (IOException e) {
             System.out.println("Deposit was not successfully made!" + e.getMessage());
         }
@@ -204,11 +238,14 @@ public class AccountingLedgerApp {
     // makes a payment (negative number)
     public static void makePayment(ArrayList<Transaction> transactions) {
 
+        System.out.println("===============================================================\n");
+
         // calls file writer method to starting writing to the file
         BufferedWriter bufferWriter = fileWriter("transactions.csv");
 
         // prompts user for payment information and stores the user inputs
-        System.out.println("P) Make a Payment - Please enter your debit information:");
+        System.out.println("       --------------- D) Make a Payment ---------------");
+        System.out.println("       ----- Please enter your Payment information -----");
 
         System.out.print("\nDescription: ");
         String description = userInput.nextLine().trim();
@@ -230,7 +267,7 @@ public class AccountingLedgerApp {
                 if (amount > 0) {
                     amount *= -1;
                     break;
-                } else if (amount < 0){
+                } else if (amount < 0) {
                     break;
                 }
             } else {
@@ -249,28 +286,37 @@ public class AccountingLedgerApp {
             // concatenates the time stamp with the formatter and the user inputs of their payment information
             bufferWriter.write(dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount);
             // displays out the payment just made
-            System.out.println("Payment: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
+            System.out.println("\nPayment: " + dateAndTime.format(timeStampFormatter) + "|" + description + "|" + vendor + "|" + amount +
                     " successfully made!");
 
             // closes out the writer
             bufferWriter.close();
+
+            // to reload transactions memory to display the new deposit in the ledgers
+            transactions.clear();
+            transactions.addAll(getTransaction());
         } catch (Exception e) {
             System.out.println("Payment was not successfully made! " + e.getMessage());
         }
 
     }
 
+
+// --------------------------------------------------------------------------------------------------------------------
+
+
     // displays ledger screen
     public static String ledgerScreen() {
 
-        System.out.println("\n===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // prompts user how they would like to view their ledgers or go back home
-        System.out.println("L) Ledgers - How would you like to view your ledgers?\n" +
-                "\tA) All\n" +
-                "\tD) Deposits\n" +
-                "\tP) Payments\n" +
-                "\tR) Reports\n" +
+        System.out.println("L) Ledgers - How would you like to view your Transactions?\n" +
+                "---------------------------------------------------------------\n" +
+                "\tA) All Transactions\n" +
+                "\tD) Deposits Only\n" +
+                "\tP) Payments Only\n" +
+                "\tR) View Reports\n" +
                 "\tH) Back to Home Screen");
 
         // returns user input
@@ -280,11 +326,13 @@ public class AccountingLedgerApp {
     // displays all the ledgers
     public static void viewAll(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- L) All Transactions ---------------\n");
 
         // loops through the file and displays all transactions
         for (Transaction t : transactions) {
-            System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+            System.out.printf("%s|%s|%s|%s|$%.2f\n",
                     t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
         }
         // displays exit question
@@ -294,13 +342,15 @@ public class AccountingLedgerApp {
     // displays only deposits made
     public static void viewDeposits(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- L) Deposits Only ---------------\n");
 
         // loops through the file and displays deposits
         for (Transaction t : transactions) {
             // if the amount is greater than 0 (positive) then it gets displayed
             if (t.getAmount() > 0) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -311,13 +361,15 @@ public class AccountingLedgerApp {
     // displays only payments made
     public static void viewPayments(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- L) Payments Only ---------------\n");
 
         // loops through the file and displays payments
         for (Transaction t : transactions) {
             // if the amount is less than 0 (negative) then it gets displayed
             if (t.getAmount() < 0) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -325,13 +377,18 @@ public class AccountingLedgerApp {
         ledgerScreenExit();
     }
 
+
+// --------------------------------------------------------------------------------------------------------------------
+
+
     // displays reports screen
     public static int reportsScreen() {
 
-        System.out.println("\n===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // prompts user of how they would like their report or go back to the ledger screen
-        System.out.println("R) Reports - What kind of report would you like to run?\n" +
+        System.out.println("R) Reports - What kind of Report would you like to run?\n" +
+                "---------------------------------------------------------------\n" +
                 "\t1) Month To Date\n" +
                 "\t2) Previous Month\n" +
                 "\t3) Year To Date\n" +
@@ -351,7 +408,9 @@ public class AccountingLedgerApp {
     // displays report of month to current date
     public static void monthToDate(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- 1) Month To Date ---------------\n");
 
         // gets current date and gets month number and year from current date
         LocalDate currentDate = LocalDate.now();
@@ -363,7 +422,7 @@ public class AccountingLedgerApp {
             LocalDate target = t.getDate();
             // compares dates in array to current month and year to display transactions only of this month
             if (target.getMonthValue() == currentMonth && target.getYear() == currentYear) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -374,7 +433,9 @@ public class AccountingLedgerApp {
     // displays report of previous month
     public static void previousMonth(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- 2) Previous Month ---------------\n");
 
         // gets current date to subtract month by 1 to get previous month value
         LocalDate currentDate = LocalDate.now();
@@ -387,7 +448,7 @@ public class AccountingLedgerApp {
             LocalDate target = t.getDate();
             // compares dates in array to previous month and current year to display transactions only of previous month
             if (target.getMonthValue() == previousMonth && target.getYear() == currentYear) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -398,7 +459,9 @@ public class AccountingLedgerApp {
     // displays report of year to current date
     public static void yearToDate(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- 3) Year To Date ---------------\n");
 
         // gets current year from the current date
         LocalDate currentDate = LocalDate.now();
@@ -409,7 +472,7 @@ public class AccountingLedgerApp {
             LocalDate target = t.getDate();
             // compares dates in array to current year
             if (target.getYear() == currentYear) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -420,7 +483,9 @@ public class AccountingLedgerApp {
     // displays report of previous year
     public static void previousYear(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
+
+        System.out.println("      --------------- 4) Previous Year ---------------\n");
 
         // gets previous year by subtracting 1 from current year
         LocalDate currentDate = LocalDate.now();
@@ -432,7 +497,7 @@ public class AccountingLedgerApp {
             LocalDate target = t.getDate();
             // compares dates in array to previous year
             if (target.getYear() == previousYear) {
-                System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                System.out.printf("%s|%s|%s|%s|$%.2f\n",
                         t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
@@ -443,32 +508,34 @@ public class AccountingLedgerApp {
     // displays vendor when searched
     public static void searchVendor(ArrayList<Transaction> transactions) {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // prompts user to enter vendor name
-        System.out.println("5) Search by Vendor - Please enter Vendor's name");
+        System.out.println("       --------------- 5) Search by Vendor ---------------");
+        System.out.println("       --------- Please enter Vendor information ---------");
 
         while (true) {
             // stores user input
             System.out.print("\nVendor: ");
-            String vendorName = userInput.nextLine().trim();
+            String vendorName = userInput.nextLine().trim().toUpperCase();
+
+            System.out.println("\n===============================================================\n");
 
             // displays user input
-            System.out.println("\n" + vendorName + "'s Transactions:");
-            System.out.println("===============================================================");
+            System.out.println("       --------------- " + vendorName + "'s Transactions ---------------\n");
 
             // loops through transactions and gets the vendor to match user input and displays them
             for (Transaction t : transactions) {
                 if (t.getVendor().equalsIgnoreCase(vendorName)) {
-                    System.out.printf("%tF|%tT|%s|%s|$%.2f\n",
+                    System.out.printf("%s|%s|%s|%s|$%.2f\n",
                             t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
                 }
             }
 
-            System.out.println("===============================================================");
+            System.out.println("\n===============================================================\n");
 
             // asks user if they want to search again or exit to go back to Reports Screen
-            System.out.println("\nWould you like to search for another Vendor? (Y/N)");
+            System.out.println("Would you like to search for another Vendor? (Y/N)");
             String choice = userInput.nextLine();
 
             // if user doesn't enter yes then exits
@@ -479,14 +546,37 @@ public class AccountingLedgerApp {
 
     }
 
+
+// --------------------------------------------------------------------------------------------------------------------
+
+
+    // start up and greeting message
+    public static void greeting() throws InterruptedException {
+        // loading bar
+        for (int i = 0; i <= 100; i++) {
+            Thread.sleep(30);
+            System.out.print("\rLoading... " + i + "%");
+        }
+
+        System.out.println("\n_________________________________________");
+        System.out.println("|                                       |");
+        System.out.println("|               Welcome                 |");
+        System.out.println("|                  to                   |");
+        System.out.println("|          Accounting Ledger            |");
+        System.out.println("|                 App!                  |");
+        System.out.println("|_______________________________________|");
+
+        Thread.sleep(2000);
+    }
+
     // exit question for ledger screen options
     public static void ledgerScreenExit() {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // simple question to keep user inside the ledger view instead of immediately coming back to Ledgers Screen
         while (true) {
-            System.out.println("\nWould you like to move back to - L) Ledgers? (Y)");
+            System.out.println("Would you like to move back to - L) Ledgers? (Y)");
             String choice = userInput.nextLine();
             if (choice.equalsIgnoreCase("Y")) {
                 break;
@@ -497,11 +587,11 @@ public class AccountingLedgerApp {
     // exit question for reports screen options
     public static void reportScreenExit() {
 
-        System.out.println("===============================================================");
+        System.out.println("\n===============================================================\n");
 
         // simple question to keep user inside the report instead of immediately coming back to Reports Screen
         while (true) {
-            System.out.println("\nWould you like to move back to - R) Reports? (Y)");
+            System.out.println("Would you like to move back to - R) Reports? (Y)");
             String choice = userInput.nextLine();
             if (choice.equalsIgnoreCase("Y")) {
                 break;
